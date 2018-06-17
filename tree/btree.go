@@ -88,7 +88,19 @@ func moveFromRight(start int, dstNode *btreeNode, srcNode *btreeNode) {
 		//dstNode.lastKey = srcNode.keys[start]
 	}
 	srcNode.keyNum--
+	//fix begin
+	//the lastKey of dstNode must be empy
+	//dstNode.lastKey = srcNode.lastKey.child
+	dstNode.lastKey = &btreeKey{child: srcNode.lastKey.child}
+	if srcNode.keys[start].child != nil {
+		//TODO: check lastKey is nil
+		srcNode.lastKey.child = srcNode.keys[start].child
+	}
 	srcNode.keys[start] = nil
+	//fix begin
+	/*
+		srcNode.lastKey = nil
+	*/
 }
 
 func (pn *btreeNode) dump() {
@@ -123,6 +135,10 @@ func (bt *BTree) split(pn *btreeNode) {
 	midKey, neighbour := parent.add(left.keys[medianIdx].key, left.keys[medianIdx].value)
 	midKey.child = left
 	neighbour.child = right
+	//fix begin
+	/*
+	 */
+	//fix end
 	parent.dump()
 	moveFromRight(medianIdx, right, left)
 	right.dump()
@@ -186,16 +202,19 @@ func traverse(height int, queue []*btreeNode) {
 	if len(queue) == 0 {
 		return
 	}
-	e := queue[0]
-	queue = append(queue[:0], queue[1:]...)
-	for k := 0; e != nil && k < e.keyNum; k++ {
-		key := e.keys[k]
-		fmt.Printf("layer i:%d key:%d\n", height, key.key)
-		queue = append(queue, key.child)
-	}
-	if e != nil && e.lastKey != nil {
-		fmt.Printf("last layer i:%d key:%d\n", height, e.lastKey.key)
-		queue = append(queue, e.lastKey.child)
+	num := len(queue)
+	for i := 0; i < num; i++ {
+		e := queue[0]
+		queue = append(queue[:0], queue[1:]...)
+		for k := 0; e != nil && k < e.keyNum; k++ {
+			key := e.keys[k]
+			fmt.Printf("layer i:%d key:%d parent:\n", height, key.key)
+			queue = append(queue, key.child)
+		}
+		if e != nil && e.lastKey != nil {
+			fmt.Printf("------->last layer i:%d key:%d\n\n", height, e.lastKey.key)
+			queue = append(queue, e.lastKey.child)
+		}
 	}
 	height++
 	traverse(height, queue)
