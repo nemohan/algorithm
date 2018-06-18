@@ -80,11 +80,9 @@ func delLeftEmpty(node *bstNode) {
 
 }
 
-func delRightEmpty(node *bstNode) {
-	fmt.Printf("\n xxxxxxxxxxxxdel right empty\n")
-	delNode := node
-	child := &node.left
-	dstNode := &node.left
+func delRightEmpty(delNode *bstNode) {
+	child := &delNode.left
+	dstNode := &delNode.left
 	for ; child != nil && *child != nil; child = &(*child).right {
 		dstNode = child
 	}
@@ -103,7 +101,6 @@ func delInernalNode(node *bstNode) {
 		delRightEmpty(node)
 		return
 	}
-	//delNode := node
 	child := &node.right
 	dstNode := &node.right
 	for ; child != nil && *child != nil; child = &(*child).left {
@@ -111,7 +108,10 @@ func delInernalNode(node *bstNode) {
 	}
 	targetNode := *dstNode
 	*dstNode = nil
-	node.right = targetNode.right
+	//TODO: targetNode.right is always nil
+	if targetNode.right != nil {
+		node.right = targetNode.right
+	}
 	node.value = targetNode.value
 	node.key = targetNode.key
 }
@@ -146,10 +146,10 @@ func (bst *BSTree) BFSTraverse() {
 		return
 	}
 	queue := []*bstNode{bst.root}
-	traverse(queue)
+	bstTraverse(queue)
 }
 
-func traverse(queue []*bstNode) {
+func bstTraverse(queue []*bstNode) {
 	if len(queue) == 0 {
 		return
 	}
@@ -164,5 +164,5 @@ func traverse(queue []*bstNode) {
 		queue = append(queue, node.right)
 		node.right.height = node.height + 1
 	}
-	traverse(queue)
+	bstTraverse(queue)
 }
