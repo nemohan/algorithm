@@ -16,20 +16,24 @@ func checkResult(expected []int, result []int, t *testing.T) {
 	}
 }
 
-func sortTest(t *testing.T) {
+func sortTest(t *testing.T, sortFunc func([]int) []int) {
 	src := []int{10, 2, 4, 6, 8}
 	dst := []int{2, 4, 6, 8, 10}
-	tmp := SelectSort(src)
+	tmp := sortFunc(src)
 	checkResult(dst, tmp, t)
 
 	src = []int{1, 2, 3, 4, 6}
-	checkResult(src, SelectSort(src), t)
+	checkResult(src, sortFunc(src), t)
+
+	src = []int{1, 2, 3, 4, 6}
+	src1 := []int{6, 4, 3, 2, 1}
+	checkResult(src, sortFunc(src1), t)
 }
 
 func TestSelectSort(t *testing.T) {
-	sortTest(t)
+	sortTest(t, SelectSort)
 }
 
 func TestBubbleSort(t *testing.T) {
-	sortTest(t)
+	sortTest(t, BubbleSort)
 }

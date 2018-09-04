@@ -1,29 +1,25 @@
 package sort
 
-import ()
-
 func SelectSort(src []int) []int {
 	num := len(src)
 	for i := 0; i < num-1; i++ {
-		min := src[i]
-		idx := 0
+		min := i
 		for j := i + 1; j < num; j++ {
-			if src[j] < min {
-				min = src[j]
-				idx = j
+			if src[j] < src[min] {
+				min = j
 			}
 		}
-		src[i], src[idx] = src[idx], src[i]
+		src[i], src[min] = src[min], src[i]
 	}
 	return src
 }
 
 func BubbleSort(src []int) []int {
 	num := len(src)
-	for i := 0; i < num; i++ {
-		for j := i + 1; j < num-i; j++ {
-			if src[j] > src[i] {
-				src[i], src[j] = src[j], src[i]
+	for i := 0; i < num-1; i++ {
+		for j := 1; j < num-i; j++ {
+			if src[j-1] > src[j] {
+				src[j-1], src[j] = src[j], src[j-1]
 			}
 		}
 	}
