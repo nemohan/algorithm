@@ -25,3 +25,16 @@ func BubbleSort(src []int) []int {
 	}
 	return src
 }
+
+func InsertSort(src []int) []int {
+	num := len(src)
+	for i := 1; i <= num-1; i++ {
+		tmp := src[i]
+		j := i - 1
+		for ; j >= 0 && tmp < src[j]; j-- {
+			src[j+1] = src[j]
+		}
+		src[j+1] = tmp
+	}
+	return src
+}

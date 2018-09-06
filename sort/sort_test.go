@@ -37,3 +37,6 @@ func TestSelectSort(t *testing.T) {
 func TestBubbleSort(t *testing.T) {
 	sortTest(t, BubbleSort)
 }
+func TestInsertSort(t *testing.T) {
+	sortTest(t, InsertSort)
+}
