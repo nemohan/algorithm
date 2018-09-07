@@ -11,6 +11,10 @@ func TestBFS(t *testing.T) {
 	g.AddEdge(1, 4)
 	g.AddEdge(4, 3)
 	g.BFSTraverse()
+	g.DFSTraverse()
 	//g.Dump()
+}
+
+func TestDFS(t *testing.T) {
 
 }

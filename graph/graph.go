@@ -70,11 +70,36 @@ func (g *Graph) bfs(queue *list.List) {
 	g.bfs(queue)
 }
 
-func DFSTraverse() {
-
+func (g *Graph) DFSTraverse() {
+	g.visited = make(map[int]bool)
+	//stack := list.New()
+	for _, v := range g.vertexes {
+		if _, ok := g.visited[v.id]; ok {
+			continue
+		}
+		//s.PushBack(v)
+		g.dfs(v)
+	}
 }
-func dfs() {
 
+func (g *Graph) dfs(v *vertex) {
+	/*
+		tail := stack.Back()
+		v := tail.Value.(*vertex)
+		l := v.list
+	*/
+
+	fmt.Printf("dfs vertex:%d\n", v.id)
+	g.visited[v.id] = true
+	l := v.list
+	for e := l.Front(); e != nil; e = e.Next() {
+		id := e.Value.(int)
+		if _, ok := g.visited[id]; ok {
+			continue
+		}
+
+		g.dfs(g.vertexes[id])
+	}
 }
 
 func (g *Graph) Dump() {
