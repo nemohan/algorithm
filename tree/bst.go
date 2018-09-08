@@ -30,6 +30,7 @@ func NewBSTree() *BSTree {
 func (bst *BSTree) Insert(key int, value interface{}) {
 	n, ok := find(&bst.root, key)
 	if ok {
+		(*n).value = value
 		return
 	}
 	*n = &bstNode{key: key, value: value}
@@ -69,15 +70,44 @@ func (bst *BSTree) Del(key int) bool {
 	dstNode := *node
 	if dstNode.left == nil && dstNode.right == nil {
 		*node = nil
-		goto out
+		return true
 	}
-	delInernalNode(dstNode)
-out:
+	if dstNode.left == nil && dstNode.right != nil {
+		dstNode.key = dstNode.right.key
+		dstNode.value = dstNode.right.value
+		dstNode.right = nil
+		return true
+	} else if dstNode.left != nil && dstNode.right == nil {
+		dstNode.key = dstNode.left.key
+		dstNode.value = dstNode.left.value
+		dstNode.left = nil
+		return true
+	}
+	//delInernalNode(dstNode)
+	delNode(dstNode)
 	return true
 }
 
-func delLeftEmpty(node *bstNode) {
+func getSuccessor(node *bstNode) **bstNode {
+	c := &node.right
+	for ; (*c).left != nil; c = &((*c).left) {
+	}
+	return c
+}
 
+func delNode(node *bstNode) {
+	successor := getSuccessor(node)
+	fmt.Printf("node:%d successor:%d\n", node.key, (*successor).key)
+	node.key = (*successor).key
+	node.value = (*successor).value
+	if (*successor).right == nil {
+		*successor = nil
+		return
+	}
+	r := (*successor).right
+	(*successor).value = r.value
+	(*successor).key = r.key
+	(*successor).right = nil
 }
 
 func delRightEmpty(delNode *bstNode) {
@@ -131,14 +161,6 @@ func inOrder(root *bstNode, keys *[]int) {
 	//keys = append(keys, root.key)
 	*keys = append(*keys, root.key)
 	inOrder(root.right, keys)
-}
-
-func (bst *BSTree) PostOrder() {
-
-}
-
-func (bst *BSTree) PreOrder() {
-
 }
 
 func (bst *BSTree) BFSTraverse() {

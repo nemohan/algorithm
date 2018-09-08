@@ -1,7 +1,7 @@
 package tree
 
 import (
-	//"fmt"
+	"fmt"
 	"testing"
 )
 
@@ -33,9 +33,8 @@ func TestInOrder(t *testing.T) {
 
 func checkResult(result []int, expected []int, t *testing.T) {
 	keys := result
-	//fmt.Printf("keys:%v\n", keys)
 	if len(keys) != len(expected) {
-		t.Fatalf("expected keys number:%d got %d\n", len(expected), len(keys))
+		t.Fatalf("expected keys number:%d got %d %v\n", len(expected), len(keys), result)
 	}
 	for i, v := range expected {
 		if v != keys[i] {
@@ -65,22 +64,47 @@ func checkDecl(bst *BSTree, key int, t *testing.T) {
 
 func TestDelHasTwoSubTree(t *testing.T) {
 	bst := createTree()
+	bst.Del(20)
 	checkDecl(bst, 20, t)
 
 	bst = createTree()
 	checkDecl(bst, 10, t)
+	bst.Del(10)
+
 	bst = createTree()
+	bst.Del(15)
 	checkDecl(bst, 15, t)
 }
 
 func TestDelInternal(t *testing.T) {
 	bst := createTree()
-	bst.Del(22)
-	bst.InOrder()
-
 	bst.Del(21)
-	bst.InOrder()
+	keys := bst.InOrder()
+	checkDecl(bst, 21, t)
+	fmt.Printf("keys:%v\n", keys)
+}
 
+func delKey(src []int, key int) []int {
+	for i, e := range src {
+		if e == key {
+			src = append(src[:i], src[i+1:]...)
+			break
+		}
+	}
+	return src
+}
+func TestDelNodes(t *testing.T) {
+	bst := createTree()
 	bst.Del(20)
-	bst.InOrder()
+	bst.Del(15)
+	bst.Del(10)
+	bst.Del(21)
+	expected := delKey(srcDataSorted, 20)
+	expected = delKey(expected, 15)
+	expected = delKey(expected, 10)
+	expected = delKey(expected, 21)
+	keys := bst.InOrder()
+	checkResult(keys, expected, t)
+	//fmt.Printf("keys:%v\n", keys)
+	//bst.BFSTraverse()
 }
