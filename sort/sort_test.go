@@ -22,7 +22,7 @@ func sortTest(t *testing.T, sortFunc func([]int) []int) {
 	tmp := sortFunc(src)
 	checkResult(dst, tmp, t)
 
-	src = []int{1, 2, 3, 4, 6}
+	src = []int{1, 2, 3, 4, 5, 6}
 	checkResult(src, sortFunc(src), t)
 
 	src = []int{1, 2, 3, 4, 6}
@@ -37,6 +37,15 @@ func TestSelectSort(t *testing.T) {
 func TestBubbleSort(t *testing.T) {
 	sortTest(t, BubbleSort)
 }
+
 func TestInsertSort(t *testing.T) {
 	sortTest(t, InsertSort)
+}
+
+func TestQuickSort(t *testing.T) {
+	sortTest(t, QuickSort)
+}
+
+func TestMergeSort(t *testing.T) {
+	sortTest(t, MergeSort)
 }
