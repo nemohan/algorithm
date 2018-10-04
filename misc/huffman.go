@@ -26,12 +26,12 @@ type codeword struct {
 
 type probType float32
 
-func NewHuffmanTree(table map[rune]probType) map[rune]uint32 {
+func NewHuffmanTree(table map[rune]probType) map[rune]string {
 	tree := createHuffmanTree(table)
-	tree.Inorder()
+	//tree.Inorder()
+	tree.genCode()
 	fmt.Printf("code table:%v\n", tree.codeTable)
-	codeTable := tree.genCode()
-	return codeTable
+	return tree.codeTable
 }
 
 func createHuffmanTree(table map[rune]probType) *huffmanTree {
@@ -88,8 +88,8 @@ func (h *huffmanTree) updateChaTable(node *node) {
 	h.size++
 }
 
-func (h *huffmanTree) genCode() map[rune]uint32 {
-	return nil
+func (h *huffmanTree) genCode() {
+	h.inorder(h.root, "")
 }
 
 func (h *huffmanTree) Inorder() {
@@ -101,11 +101,10 @@ func (h *huffmanTree) inorder(node *node, bits string) {
 		return
 	}
 	h.inorder(node.left, bits+"0")
-	fmt.Printf("prob:%v ch:%q bits:%s\n", node.prob, node.cha, bits)
 	if node.left == nil && node.right == nil {
 		h.codeTable[node.cha] = bits
 	}
-
+	fmt.Printf("cha:%v prob:%v\n", node.cha, node.prob)
 	if node.right != nil {
 		bits += "1"
 	}
