@@ -77,6 +77,9 @@ func (h *huffmanTree) chooseMinCha() (*node, *node) {
 	h.table[h.size-1] = nil
 	h.table[h.size-2] = nil
 	h.size -= 2
+	if l.cha > r.cha {
+		return r, l
+	}
 	return l, r
 }
 
@@ -97,11 +100,6 @@ func (h *huffmanTree) inorder(node *node, bits string) {
 	if node == nil {
 		return
 	}
-	/*
-		if node.left != nil {
-			bits += "0"
-		}
-	*/
 	h.inorder(node.left, bits+"0")
 	fmt.Printf("prob:%v ch:%q bits:%s\n", node.prob, node.cha, bits)
 	if node.left == nil && node.right == nil {
