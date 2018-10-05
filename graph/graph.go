@@ -11,6 +11,7 @@ type vertex struct {
 	next     *vertex
 	prev     *vertex
 	distance int
+	key      interface{}
 }
 
 type edge struct {
@@ -23,6 +24,8 @@ type Graph struct {
 	visited  map[int]bool
 }
 
+const maxWeight = 100
+
 func NewGraph() *Graph {
 	return &Graph{
 		vertexes: make(map[int]*vertex),
@@ -30,7 +33,13 @@ func NewGraph() *Graph {
 	}
 }
 
-const maxWeight = 100
+func (g *Graph) AddVertex(id int) {
+	_, ok := g.vertexes[id]
+	if ok {
+		return
+	}
+	g.vertexes[id] = &vertex{id: id}
+}
 
 func (g *Graph) addEdge(head int, tail int, weight int) {
 	v, ok := g.vertexes[head]
@@ -81,22 +90,15 @@ func (g *Graph) bfs(queue *list.List) {
 
 func (g *Graph) DFSTraverse() {
 	g.visited = make(map[int]bool)
-	//stack := list.New()
 	for _, v := range g.vertexes {
 		if _, ok := g.visited[v.id]; ok {
 			continue
 		}
-		//s.PushBack(v)
 		g.dfs(v)
 	}
 }
 
 func (g *Graph) dfs(v *vertex) {
-	/*
-		tail := stack.Back()
-		v := tail.Value.(*vertex)
-		l := v.list
-	*/
 	fmt.Printf("dfs vertex:%d\n", v.id)
 	g.visited[v.id] = true
 	l := v.list
@@ -122,10 +124,7 @@ func chooseMinDistance(vertexSlice []*vertex) ([]*vertex, *vertex) {
 	return vertexSlice, v
 }
 
-func updateDistance() {
-
-}
-
+//ShortestPath use Dijsktra
 func (g *Graph) ShortestPath(start int) {
 	vertexSet := make([]*vertex, 0)
 	for _, v := range g.vertexes {
@@ -148,7 +147,6 @@ func (g *Graph) ShortestPath(start int) {
 			t := g.vertexes[id]
 			fmt.Printf("v:%d v2:%d dis:%d weight:%d\n", v.id, id, v.distance, pe.weight)
 			if id != v.id && v.distance+pe.weight < t.distance {
-				//fmt.Printf("v:%d v2:%d dis:%d weight:%d\n", v.id, id, v.distance, t.weight)
 				t.distance = v.distance + pe.weight
 				t.prev = v
 			}
@@ -158,6 +156,18 @@ func (g *Graph) ShortestPath(start int) {
 	for _, v := range pathTable {
 		fmt.Printf("%d distance:%d\n", v.id, v.distance)
 	}
+}
+
+func PrimSpanningTree() {
+
+}
+
+func KruskalSpanningTree() {
+
+}
+
+func (g *Graph) genMinSpanningTree() {
+
 }
 
 func (g *Graph) Dump() {
