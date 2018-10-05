@@ -12,10 +12,12 @@ type vertex struct {
 	prev     *vertex
 	distance int
 	key      interface{}
+	prevID   int
 }
 
 type edge struct {
 	end    int
+	start  int
 	weight int
 }
 
@@ -166,8 +168,51 @@ func KruskalSpanningTree() {
 
 }
 
-func (g *Graph) genMinSpanningTree() {
+func chooseMinEdge(edgeSet map[int]*edge) *edge {
+	min := maxWeight
+	i := 0
+	for k, e := range edgeSet {
+		if e.weight < min {
+			i = k
+			min = e.weight
+		}
+	}
+	e := edgeSet[i]
+	delete(edgeSet, i)
+	return e
+}
 
+func (g *Graph) GenSpanningTree() {
+	edgeSet := make(map[int]*edge, 0)
+	lastVertex := (*vertex)(nil)
+	for _, v := range g.vertexes {
+		e := &edge{end: v.id, weight: maxWeight}
+		edgeSet[v.id] = e
+		lastVertex = v
+	}
+
+	//current := g.vertexes[0]
+	current := lastVertex
+	delete(edgeSet, current.id)
+	tree := make(map[int]*edge)
+	tree[current.id] = nil
+
+	for len(edgeSet) > 0 {
+		for e := current.list.Front(); e != nil; e = e.Next() {
+			pe := e.Value.(*edge)
+			_, ok := tree[pe.end]
+			fmt.Printf("end:%d \n", pe.end)
+			if !ok && pe.weight < edgeSet[pe.end].weight {
+				edgeSet[pe.end].weight = pe.weight
+				edgeSet[pe.end].start = current.id
+			}
+		}
+		minEdge := chooseMinEdge(edgeSet)
+		fmt.Printf("add start:%d end:%d weight:%d\n", minEdge.start, minEdge.end, minEdge.weight)
+		tree[minEdge.end] = minEdge
+		current = g.vertexes[minEdge.end]
+	}
+	fmt.Printf("tree:%v\n", tree)
 }
 
 func (g *Graph) Dump() {
