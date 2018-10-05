@@ -60,16 +60,8 @@ func TestShortestPath2(t *testing.T) {
 	g.ShortestPath(65)
 }
 
-func TestSpanningTreePrim(t *testing.T) {
+func createTestGraph() *Graph {
 	g := NewGraph()
-	g.AddEdge(65, 66, 1)
-	g.AddEdge(65, 67, 5)
-	g.AddEdge(65, 68, 2)
-
-	g.AddEdge(67, 68, 3)
-	g.GenSpanningTree()
-
-	g = NewGraph()
 	g.AddEdge(65, 66, 3)
 	g.AddEdge(65, 69, 6)
 	g.AddEdge(65, 70, 5)
@@ -84,9 +76,35 @@ func TestSpanningTreePrim(t *testing.T) {
 	g.AddEdge(68, 70, 5)
 
 	g.AddEdge(69, 70, 2)
+	return g
+}
+
+func createTestGraph1() *Graph {
+	g := NewGraph()
+	g.AddEdge(65, 66, 1)
+	g.AddEdge(65, 67, 5)
+	g.AddEdge(65, 68, 2)
+
+	g.AddEdge(67, 68, 3)
+	return g
+
+}
+func TestSpanningTreePrim(t *testing.T) {
+	g := createTestGraph1()
+	g.GenSpanningTree()
+
+	g = createTestGraph()
 	g.GenSpanningTree()
 }
 
+func TestKruskal(t *testing.T) {
+	g := createTestGraph1()
+	g.GenSpanningTreeWithKruskal()
+
+	g = createTestGraph()
+
+	g.GenSpanningTreeWithKruskal()
+}
 func TestDFS(t *testing.T) {
 
 }

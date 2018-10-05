@@ -24,6 +24,8 @@ type edge struct {
 type Graph struct {
 	vertexes map[int]*vertex
 	visited  map[int]bool
+	edges    []*edge
+	id       int
 }
 
 const maxWeight = 100
@@ -56,6 +58,7 @@ func (g *Graph) addEdge(head int, tail int, weight int) {
 func (g *Graph) AddEdge(head int, tail int, weight int) {
 	g.addEdge(head, tail, weight)
 	g.addEdge(tail, head, weight)
+	g.edges = append(g.edges, &edge{start: head, end: tail, weight: weight})
 }
 
 func (g *Graph) BFSTraverse() {
@@ -109,7 +112,6 @@ func (g *Graph) dfs(v *vertex) {
 		if _, ok := g.visited[pe.end]; ok {
 			continue
 		}
-
 		g.dfs(g.vertexes[pe.end])
 	}
 }
@@ -160,11 +162,57 @@ func (g *Graph) ShortestPath(start int) {
 	}
 }
 
-func PrimSpanningTree() {
+func (g *Graph) getSortedEdges() {
+	num := len(g.edges)
+	edges := g.edges
+	for i := 1; i < num; i++ {
+		v := edges[i]
+		j := i
+		for ; j > 0; j-- {
+			if v.weight >= edges[j-1].weight {
+				break
+			}
+			edges[j] = edges[j-1]
+		}
+		edges[j] = v
+	}
 
 }
 
-func KruskalSpanningTree() {
+func newIter(edges []*edge) func() *edge {
+	j := 0
+	num := len(edges)
+	return func() *edge {
+		if j >= num {
+			return nil
+		}
+		e := edges[j]
+		j++
+		return e
+	}
+}
+
+func (g *Graph) GenSpanningTreeWithKruskal() {
+	g.getSortedEdges()
+	for _, v := range g.edges {
+		fmt.Printf("%#v\n", v)
+	}
+	fmt.Printf("=================\n")
+	vertexNum := len(g.vertexes)
+	unionSet := MakeSet(vertexNum)
+	iter := newIter(g.edges)
+	edgeSet := make([]*edge, 0)
+	for i := 0; i < vertexNum-1; i++ {
+		for e := iter(); e != nil; e = iter() {
+			if !unionSet.IsSameSet(e.start-65, e.end-65) {
+				edgeSet = append(edgeSet, e)
+				unionSet.Unite(e.start-65, e.end-65)
+			}
+		}
+	}
+	for _, v := range edgeSet {
+		fmt.Printf("%#v\n", v)
+	}
 
 }
 
@@ -182,6 +230,7 @@ func chooseMinEdge(edgeSet map[int]*edge) *edge {
 	return e
 }
 
+//Prim algorithm for generating spanning tree
 func (g *Graph) GenSpanningTree() {
 	edgeSet := make(map[int]*edge, 0)
 	lastVertex := (*vertex)(nil)
