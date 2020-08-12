@@ -1,8 +1,6 @@
 package str
 
-import (
-	"fmt"
-)
+import "fmt"
 
 type Node struct {
 	end   bool    //单次结束符
@@ -65,6 +63,46 @@ func find(node *Node, index int, key string) *Node {
 	return find(next, index+1, key)
 }
 
+func (t *Trie) Delete(key string) {
+	delete(t.root, 0, key)
+}
+
+func hasChildren(node *Node) bool {
+	for _, p := range node.next {
+		if p != nil {
+			return true
+		}
+	}
+	return false
+}
+func delete(node *Node, index int, key string) *Node {
+	k := key[index]
+	next := node.next[k]
+	if next == nil {
+		return node
+	}
+	if index == len(key)-1 {
+		if next.end {
+			if hasChildren(next) {
+				next.end = false
+			} else {
+				node.next[k] = nil
+			}
+			return node
+		} else {
+			return node
+		}
+	}
+	node.next[k] = delete(next, index+1, key)
+	if hasChildren(node.next[k]) {
+		return node
+	}
+	if !node.next[k].end {
+		node.next[k] = nil
+	}
+	return node
+}
+
 func (t *Trie) Dump() {
 	t.root.level = 1
 	queue := []*Node{t.root}
@@ -93,7 +131,6 @@ func (t *Trie) Keys() []string {
 		if n.end {
 			keys = append(keys, s)
 		}
-		fmt.Printf("%s bytes:%v\n", s, []byte(s))
 		keys = collectV2(string(i), n, keys)
 	}
 	return keys
@@ -124,15 +161,14 @@ func collect(node *Node, index int, key string) []string {
 	}
 	if index == len(key)-1 {
 		keys := make([]string, 0)
-		if node.end {
+		if node.next[k].end {
 			keys = append(keys, key)
 		}
-		for i, pnext := range node.next {
+		for _, pnext := range node.next {
 			if pnext == nil {
 				continue
 			}
 			//keys = collectV2(key+string(i), pnext, keys)
-			fmt.Printf("=====pnext:%s\n", string(i))
 			keys = collectV2(key, pnext, keys)
 		}
 		return keys
