@@ -1,4 +1,4 @@
-package str
+package trie
 
 type radixTreeNode struct {
 	key   string
