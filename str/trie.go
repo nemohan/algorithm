@@ -64,7 +64,7 @@ func find(node *Node, index int, key string) *Node {
 }
 
 func (t *Trie) Delete(key string) {
-	delete(t.root, 0, key)
+	deleteKeyInTrie(t.root, 0, key)
 }
 
 func hasChildren(node *Node) bool {
@@ -75,7 +75,7 @@ func hasChildren(node *Node) bool {
 	}
 	return false
 }
-func delete(node *Node, index int, key string) *Node {
+func deleteKeyInTrie(node *Node, index int, key string) *Node {
 	k := key[index]
 	next := node.next[k]
 	if next == nil {
@@ -93,7 +93,7 @@ func delete(node *Node, index int, key string) *Node {
 			return node
 		}
 	}
-	node.next[k] = delete(next, index+1, key)
+	node.next[k] = deleteKeyInTrie(next, index+1, key)
 	if hasChildren(node.next[k]) {
 		return node
 	}
