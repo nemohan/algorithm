@@ -19,7 +19,11 @@ func NewSplayTree() *SplayTree {
 	return &SplayTree{}
 }
 
-func (s *SplayTree) Insert() {
+func (s *SplayTree) Insert(key int, value interface{}) {
+
+}
+
+func insertSplayTree(key int, value interface{}) {
 
 }
 

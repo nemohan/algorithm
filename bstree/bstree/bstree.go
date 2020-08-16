@@ -46,9 +46,9 @@ func find(node *BSTNode, key int) *BSTNode {
 	if node == nil {
 		return nil
 	}
-	if node.k < key {
+	if key < node.k {
 		return find(node.left, key)
-	} else if node.k > key {
+	} else if key > node.k {
 		return find(node.right, key)
 	}
 	return node
@@ -98,23 +98,37 @@ func delNode(node *BSTNode) *BSTNode {
 	} else if node.right == nil && node.left != nil {
 		return node.left
 	}
-	p := node.right
-	parent := node
-	for p != nil {
-		if p.left == nil {
-			break
+	//node with two subtrees
+	minNode := findMinBstNode(node.right)
+	node.k = minNode.k
+	node.v = minNode.v
+	node.right = deleteBSTNode(node.right, minNode.k)
+	/*
+		p := node.right
+		parent := node
+		for p != nil {
+			if p.left == nil {
+				break
+			}
+			parent = p
+			p = p.left
 		}
-		parent = p
-		p = p.left
-	}
-	node.k = p.k
-	if p.right != nil {
-		parent.left = p.right
-	}
-	if parent == node {
-		parent.right = nil
-	}
+		node.k = p.k
+		if p.right != nil {
+			parent.left = p.right
+		}
+		if parent == node {
+			parent.right = nil
+		}
+	*/
 	return node
+}
+
+func findMinBstNode(node *BSTNode) *BSTNode {
+	if node.left == nil {
+		return node
+	}
+	return findMinBstNode(node.left)
 }
 func (b *BSTree) InOrderTraverse() {
 	inOrderTraverse(b.root)
