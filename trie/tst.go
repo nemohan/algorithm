@@ -137,7 +137,7 @@ func getPrefixNode(node *tstNode, index int, prefix string) *tstNode {
 	} else if node.ch < prefix[index] {
 		node = getPrefixNode(node.right, index, prefix)
 	} else if node.ch > prefix[index] {
-		node = getPrefixNode(node.right, index, prefix)
+		node = getPrefixNode(node.left, index, prefix)
 	}
 	return node
 }

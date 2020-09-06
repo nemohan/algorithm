@@ -58,7 +58,6 @@ func TestTstKeys(t *testing.T) {
 	}
 }
 
-/*
 func TestTstKeysWithPrefix(t *testing.T) {
 	for i, pc := range prefixCases {
 		tst := createTst(pc.input)
@@ -77,7 +76,6 @@ func TestTstKeysWithPrefix(t *testing.T) {
 	}
 }
 
-*/
 /*
 func TestTstDelete(t *testing.T) {
 	for _, dc := range deleteCases {
