@@ -66,6 +66,29 @@ var (
 			want:  input,
 		},
 	}
+
+	prefixCases = []testCase{
+		{
+			key:   "a",
+			input: input,
+			want:  []string{"a", "aw", "awls"},
+		},
+		{
+			key:   "sa",
+			input: input,
+			want:  []string{"sa", "sad", "sam", "same", "sap"},
+		},
+		{
+			key:   "sam",
+			input: input,
+			want:  []string{"sam", "same"},
+		},
+		{
+			key:   "sw",
+			input: input,
+			want:  []string{},
+		},
+	}
 	sortInput = []string{}
 )
 
@@ -148,7 +171,8 @@ func checkKeys(t *testing.T, want, got []string) bool {
 	sort.Strings(want)
 	sort.Strings(got)
 	if len(got) != len(want) {
-		t.Logf("want:%v got:%v\n", want, got)
+		//t.Logf("want:%v got:%v\n", want, got)
+		return false
 	}
 	for i, w := range want {
 		if w != got[i] {

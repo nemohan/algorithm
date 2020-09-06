@@ -1,5 +1,8 @@
 package trie
 
+/*
+三向查找树TST
+*/
 type tstNode struct {
 	end    bool
 	left   *tstNode
@@ -91,6 +94,9 @@ func (t *Tst) Keys() []string {
 }
 
 func tstCollect(node *tstNode, key string, keys []string) []string {
+	if node == nil {
+		return keys
+	}
 	if node.end {
 		keys = append(keys, key+string(node.ch))
 	}
@@ -104,6 +110,36 @@ func tstCollect(node *tstNode, key string, keys []string) []string {
 		keys = tstCollect(node.right, key, keys)
 	}
 	return keys
+}
+
+func (t *Tst) KeysWithPrefix(prefix string) []string {
+	keys := make([]string, 0)
+	startNode := getPrefixNode(t.root, 0, prefix)
+	if startNode == nil {
+		return nil
+	}
+	if startNode.end {
+		keys = append(keys, prefix)
+	}
+	keys = tstCollect(startNode.middle, prefix, keys)
+	return keys
+}
+
+func getPrefixNode(node *tstNode, index int, prefix string) *tstNode {
+	if node == nil {
+		return nil
+	}
+	if index == len(prefix)-1 && node.ch == prefix[index] {
+		return node
+	}
+	if node.ch == prefix[index] {
+		node = getPrefixNode(node.middle, index+1, prefix)
+	} else if node.ch < prefix[index] {
+		node = getPrefixNode(node.right, index, prefix)
+	} else if node.ch > prefix[index] {
+		node = getPrefixNode(node.right, index, prefix)
+	}
+	return node
 }
 
 func (t *Tst) Delete(key string) {

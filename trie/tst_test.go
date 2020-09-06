@@ -6,14 +6,20 @@ import (
 )
 
 var tstInput = []string{
-	"a",
-	"awls",
-	"aw",
-	"sad",
-	"sam",
-	"same",
-	"sap",
-	"sa",
+	"app",
+	"apple",
+	"beer",
+	"add",
+	"jam",
+	"rental",
+}
+var tstSortInput = []string{
+	"add",
+	"app",
+	"apple",
+	"beer",
+	"jam",
+	"rental",
 }
 
 func createTst(keys []string) *Tst {
@@ -38,14 +44,13 @@ func TestTstFind(t *testing.T) {
 func TestTstKeys(t *testing.T) {
 	trie := createTst(input)
 	keys := trie.Keys()
-
 	sort.Strings(keys)
 	if len(keys) != len(sortInput) {
 		t.Fatalf("want:%v got:%v\n", sortInput, keys)
 		return
 	}
 	for i, key := range keys {
-		t.Logf("key:%s\n", key)
+		t.Logf("%s\n", key)
 		if key != sortInput[i] {
 			t.Fatalf("want:%s got:%s\n", sortInput[i], key)
 			return
@@ -53,6 +58,27 @@ func TestTstKeys(t *testing.T) {
 	}
 }
 
+/*
+func TestTstKeysWithPrefix(t *testing.T) {
+	for i, pc := range prefixCases {
+		tst := createTst(pc.input)
+		keys := tst.KeysWithPrefix(pc.key)
+		if !checkKeys(t, pc.want, keys) {
+			t.Fatalf("case:%d want:%v got:%v\n", i, pc.want, keys)
+			return
+		}
+	}
+	tst := createTst(tstInput)
+	want := []string{"add"}
+	keys := tst.KeysWithPrefix("ad")
+	if !checkKeys(t, want, keys) {
+		t.Fatalf(" want:%v got:%v\n", want, keys)
+		return
+	}
+}
+
+*/
+/*
 func TestTstDelete(t *testing.T) {
 	for _, dc := range deleteCases {
 		trie := createTst(dc.input)
@@ -61,3 +87,4 @@ func TestTstDelete(t *testing.T) {
 		checkKeys(t, dc.want, keys)
 	}
 }
+*/
